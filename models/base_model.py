@@ -1,16 +1,15 @@
 #!/usr/bin/python3
 """a base model class
 """
-
+from pathlib import Path
 import models
 from uuid import uuid4
 from datetime import datetime
 
-time = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class BaseModel:
-    """ a class from which future classes will be derived """
+    """a class from which future classes will be derived """
 
     def __init__(self, *args, **kwargs):
         """initialization for base model class"""
@@ -18,15 +17,15 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key != "__class__":
                     setattr(self, key, value)
-            if hasattr(self, "created_at") and type(self.created_at) is str:
-                self.created_at = datetime.strptime(kwargs["created_at"], time)
-            if hasattr(self, "updated_at") and type(self.updated_at) is str:
-                self.updated_at = datetime.strptime(kwargs["updated_at"], time)
+
+                if key in ['created_at', 'updated_at']:
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                self.__setattr__(key, value)
+
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            models.storage.new(self)
             models.storage.save()
 
     def __str__(self):
