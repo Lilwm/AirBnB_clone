@@ -1,6 +1,5 @@
-# AirBnB_clone
 
-# <h1 align="center">AirBnB clone - The Console Project </h1>
+# <h1 align="left">AirBnB clone - The Console Project </h1>
 
 
 ## DESCRIPTION
