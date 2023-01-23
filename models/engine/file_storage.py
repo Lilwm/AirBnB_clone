@@ -3,16 +3,19 @@
 This module is in charge of the storage of the
 classes and their management."""
 
-import json
-from pathlib import Path
-from fastai.imports import *
-from models.base_model import BaseModel
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-from models.user import User
+from json import dump, load, dumps
+from os.path import exists
+from models import base_model, user, place, state, city, amenity, review
+
+BaseModel = base_model.BaseModel
+State = state.State
+City = city.City
+Amenity = amenity.Amenity
+Place = place.Place
+Review = review.Review
+User = user.User
+name_class = ["BaseModel", "City", "State",
+              "Place", "Amenity", "Review", "User"]
 
 
 class FileStorage:
@@ -24,12 +27,12 @@ class FileStorage:
         __objects (dict): This store all the instances data
         """
 
-    __file_path = 'path.json'
+    __file_path = 'file.json'
     __objects = {}
 
     def all(self):
         """ return dictionary objects """
-        return type(self).__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """Saves a new object in the `__objects` class attribute
@@ -38,8 +41,10 @@ class FileStorage:
         Sets in the `__objects` class attribute the instance data
         with a key as <obj class name>.id.
         """
-        key = obj.__class__.__name__ + '.' + obj.id
-        self.__objects[key] = obj
+        class_name  = obj.__class__.__name__ 
+        id = obj.id
+        class_id = class_name + "." + id
+        FileStorage.__objects[class_id] = obj
 
     def save(self):
         """Serializes the content of `__objects` class attribute
@@ -51,7 +56,7 @@ class FileStorage:
         for k, v in self.__objects.items():
             json_dict[k] = v.to_dict()
         with open(self.__file_path, mode='w', encoding='utf-8') as f:
-            f.write(json.dumps(json_dict))
+            dump(json_dict, f)
 
     def reload(self):
         """Deserializes the JSON file in `__file_path` class attribute
@@ -59,8 +64,14 @@ class FileStorage:
         on the file will be deserialized and appended to the `__objects`
         class attribute like an instance with the object data.
         """
-        if path.exists(self.__file_path):
+        dic_obj = {}
+        FileStorage.__objects = {}
+        if (exists(FileStorage.__file_path)):
             with open(self.__file_path, mode='r', encoding='utf-8') as f:
-                json_dict = json.loads(f.read())
-                for k, v in json_dict.items():
-                    self.__objects[k] = eval(v['__class__'])(**v)
+                dict_obj = load(f)
+                for k, v in dic_obj.items():
+                    class_nam = key.split(".")[0]
+                    if class_nam in name_class:
+                        FileStorage.__objects[key] = eval(class_nam)(**value)
+                    else:
+                        pass
