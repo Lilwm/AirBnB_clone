@@ -1,0 +1,32 @@
+h1 {
+    text-align: left;
+    vertical-align: top;
+    font-size: 30px;
+}
+h2{
+    font-size: 30px;
+    text-align: center;
+}
+
+/*.article{
+    width: 100%;
+    padding: 20px;
+    margin: 20px;
+    border: 1px #ff5a5f;
+    border-radius: 4px;
+}*/
+.places{
+    width: 100%;
+    margin: 1rem;
+    padding: 2rem 2rem;
+    text-align: center;
+    }
+article {
+    width: 390px;
+    padding: 20px;
+    margin: 20px;
+    border: solid 1px  #ff5a5f;
+    border-radius: 4px;
+    display: inline-block;
+   vertical-align: middle;
+}
